@@ -28,6 +28,7 @@ defmodule Kiln.Master do
 
   Adds to internal priority queue and returns populated Kiln.Golem struct.
   """
+  def bake(%Golem{status: {:failure, _}}), do: :ok
   def bake(%Golem{} = golem) do
     GenStage.call(__MODULE__, {:bake, golem})
   end
@@ -82,6 +83,11 @@ defmodule Kiln.Master do
     dispatch(queue, incoming + pending, [])
   end
 
+  # If no demand then correct list order
+  defp dispatch(queue, 0, golems) do
+    {:noreply, Enum.reverse(golems), {queue, 0}}
+  end
+
   # Send golems to downstream consumer to satisfy given demand
   defp dispatch(queue, demand, golems) do
     case Queue.out(queue) do
@@ -91,11 +97,6 @@ defmodule Kiln.Master do
       {:empty, queue} ->
         {:noreply, Enum.reverse(golems), {queue, demand}}
     end
-  end
-
-  # If no demand then correct list order
-  defp dispatch(queue, 0, golems) do
-    {:noreply, Enum.reverse(golems), {queue, 0}}
   end
 
 end
