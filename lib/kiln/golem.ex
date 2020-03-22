@@ -52,15 +52,4 @@ defmodule Kiln.Golem do
     }
   end
 
-  @doc """
-  Determine if golem should be rebaked
-  """
-  def rebake?(%Golem{} = golem) do
-    if golem.attempts >= golem.chem.max_attempts do
-      false
-    else
-      true
-    end
-  end
-
 end

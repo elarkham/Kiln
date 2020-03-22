@@ -33,14 +33,10 @@ defmodule Kiln.Worker do
     |> Cache.set_status({:complete, meta})
   end
   def handle_result({:error, reason}, golem) do
-    golem =
-      golem.id
-      |> Cache.lookup
-      |> Cache.set_status({:failure, reason})
-
-    if Golem.rebake?(golem) do
-      Master.bake(golem)
-    end
+    golem.id
+    |> Cache.lookup
+    |> Cache.set_status({:failure, reason})
+    |> Master.bake
   end
 
 end

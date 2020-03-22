@@ -104,10 +104,10 @@ defmodule Kiln.Cache do
   end
 
   def set_status(%Golem{} = golem, {:failure, reason} = status) do
-    if Golem.rebake?(golem) do
-      add_failure(golem, reason)
+    if (golem.attempts + 1) >= golem.chem.max_attempts do
+      set_failure(golem, reason) # won't be rebaked
     else
-      set_failure(golem, reason)
+      add_failure(golem, reason) # will be rebaked
     end
     |> upsert
     |> Ledger.handle_status(status)
