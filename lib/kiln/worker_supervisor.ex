@@ -15,8 +15,8 @@ defmodule Kiln.WorkerSupervisor do
       restart: :temporary
     }
     sub_opts = [
-      max_demand: @max_demand,
-      min_demand: @min_demand,
+      max_demand: Application.get_env(:kiln, :max_demand) || @max_demand,
+      min_demand: Application.get_env(:kiln, :min_demand) || @min_demand,
     ]
     opts = [
       strategy: :one_for_one,
