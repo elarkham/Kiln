@@ -42,12 +42,35 @@ defmodule Kiln do
     Master.cancel(%Golem{id: id}, reason)
   end
 
-
   def set_progress(%Golem{} = golem, {progress, meta}) do
     Cache.set_progress(golem, {progress, meta})
   end
   def set_progress(%Golem{} = golem, percent, meta \\ nil) do
     Cache.set_progress(golem, {percent, meta})
+  end
+
+  def all(_opt \\ []) do
+    Cache.all()
+  end
+
+  def failed do
+    Cache.all(:failed)
+  end
+
+  def completed do
+    Cache.all(:completed)
+  end
+
+  def queued do
+    Cache.all(:queued)
+  end
+
+  def active do
+    Cache.all(:active)
+  end
+
+  def canceled do
+    Cache.all(:canceled)
   end
 
 end
