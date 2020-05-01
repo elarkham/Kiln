@@ -13,7 +13,16 @@ defmodule Kiln.Queue do
   def new(golems) do
     q = :pqueue.new()
     Enum.reduce(golems, q, fn golem, q ->
-      in_(golem, q)
+      priority = golem.chem.priority
+
+      %Golem{golem |
+        status: {:queued, priority},
+        progress: {0.0, nil},
+        queued_at: DateTime.utc_now,
+      }
+      |> Cache.upsert
+
+      :pqueue.in(golem.id, priority, q)
     end)
   end
 
