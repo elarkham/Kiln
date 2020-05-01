@@ -28,7 +28,7 @@ defmodule Kiln.Master do
 
   Adds to internal priority queue and returns populated Kiln.Golem struct.
   """
-  def bake(%Golem{status: {:failure, _}}), do: :ok
+  def bake(%Golem{status: {:failed, _} = golem}), do: golem
   def bake(%Golem{} = golem) do
     GenStage.call(__MODULE__, {:bake, golem})
   end

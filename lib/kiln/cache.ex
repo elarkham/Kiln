@@ -93,9 +93,9 @@ defmodule Kiln.Cache do
     |> Ledger.handle_status(status)
   end
 
-  def set_status(%Golem{} = golem, {:complete, meta} = status) do
+  def set_status(%Golem{} = golem, {:completed, meta} = status) do
     %Golem{golem |
-      status: {:complete, meta},
+      status: {:completed, meta},
       attempts: golem.attempts + 1,
       ended_at: DateTime.utc_now
     }
@@ -103,9 +103,9 @@ defmodule Kiln.Cache do
     |> Ledger.handle_status(status)
   end
 
-  def set_status(%Golem{} = golem, {:failure, reason} = status) do
+  def set_status(%Golem{} = golem, {:failed, reason} = status) do
     if (golem.attempts + 1) >= golem.chem.max_attempts do
-      set_failure(golem, reason) # won't be rebaked
+      set_failed(golem, reason) # won't be rebaked
     else
       add_failure(golem, reason) # will be rebaked
     end
@@ -132,7 +132,7 @@ defmodule Kiln.Cache do
   #   Helpers   #
   ###############
 
-  def set_failure(%Golem{} = golem, reason) do
+  def set_failed(%Golem{} = golem, reason) do
     ended_at = DateTime.utc_now
     failure = %{
       reason: reason,
@@ -142,7 +142,7 @@ defmodule Kiln.Cache do
     }
 
     %Golem{golem |
-      status: {:failure, reason},
+      status: {:failed, reason},
       attempts: golem.attempts + 1,
       failures: [failure | golem.failures],
       ended_at: ended_at

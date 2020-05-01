@@ -32,8 +32,8 @@ defmodule Kiln.Ledger.DETS do
     |> Enum.map(fn {_id, golem} -> golem end)
     |> Enum.reject(fn %Golem{status: {type, _}} ->
       case type do
-        :complete -> true
-        :failure  -> true
+        :completed -> true
+        :failed    -> true
 
         _ -> false
       end

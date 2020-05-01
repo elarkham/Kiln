@@ -5,11 +5,11 @@ defmodule Kiln.Golem do
   alias __MODULE__
 
   @type status ::
-      {:queued,   priority :: number}
-    | {:active,   pid      :: pid   }
-    | {:complete, meta     :: any   }
-    | {:failure,  reason   :: any   }
-    | {:canceled, reason   :: any   }
+      {:queued,    priority :: number}
+    | {:active,    pid      :: pid   }
+    | {:completed, meta     :: any   }
+    | {:failed,    reason   :: any   }
+    | {:canceled,  reason   :: any   }
 
   @type progress :: {percent :: number, meta :: any}
 
