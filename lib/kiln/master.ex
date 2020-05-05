@@ -30,7 +30,7 @@ defmodule Kiln.Master do
   """
   def bake(%Golem{status: {:failed, _} = golem}), do: golem
   def bake(%Golem{} = golem) do
-    GenStage.call(__MODULE__, {:bake, golem})
+    GenStage.call(__MODULE__, {:bake, golem}, :infinity)
   end
 
   @doc """
